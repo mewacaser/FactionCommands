@@ -1,0 +1,14 @@
+{
+  "argument.faction.invalid": "Faction name: %s is invalid",
+  "commands.faction.clear": "Permanently deleted %s",
+  "commands.faction.hide": "Successfully removed %s",
+  "commands.faction.list": "Faction: %1$s Online: %2$s | Active: %3$s | Total: %4$s",
+  "commands.faction.query": "%1$s is a part of %2$s",
+  "commands.faction.queryteam": "Your teammate %1$s is at %2$s",
+  "commands.faction.queryteamlist": "Online: [ %1$s ], Offline: [ %2$s ], Inactive: [ %3$s ]",
+  "commands.faction.register": "Successfully registered %1$s at %2$s",
+  "commands.faction.register.move": "Successfully moved %1$s to %2$s",
+  "commands.faction.register.rename": "Successfully renamed %1$s to %2$s",
+  "commands.faction.switch": "Successfully switched factions to %s",
+  "commands.faction.unhide": "Successfully revived %s"
+}

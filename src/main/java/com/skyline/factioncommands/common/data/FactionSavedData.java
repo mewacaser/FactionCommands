@@ -3,9 +3,11 @@ package com.skyline.factioncommands.common.data;
 import com.skyline.factioncommands.FactionCommands;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -20,10 +22,6 @@ public class FactionSavedData extends SavedData {
 	public Map<String, FactionData> factions = new HashMap<>();
 
 	public static class DimLocation {
-		public static final String OVERWORLD = "overworld";
-		public static final String NETHER = "nether";
-		public static final String END = "end";
-
 		public Vec3 pos;
 		public ResourceKey<Level> dim;
 
@@ -33,16 +31,13 @@ public class FactionSavedData extends SavedData {
 		}
 
 		public static DimLocation read(CompoundTag nbt) {
-			ResourceKey<Level> dim = Level.OVERWORLD;
-			Vec3 pos = Vec3.ZERO;
-			if (nbt.contains("dim")) {
-				String dimKey = nbt.getString("dim");
-				dim = dimKey.equals(OVERWORLD) ? Level.OVERWORLD : dimKey.equals(NETHER) ? Level.NETHER : dimKey.equals(END) ? Level.END : Level.OVERWORLD;
-			}
-			if (nbt.contains("pos_x") && nbt.contains("pos_y") && nbt.contains("pos_z")) {
-				pos = new Vec3(nbt.getDouble("pos_x"), nbt.getDouble("pos_y"), nbt.getDouble("pos_z"));
-			}
-			return new DimLocation(pos, dim);
+			return new DimLocation(
+				nbt.contains("pos_x") && nbt.contains("pos_y") && nbt.contains("pos_z") ?
+					new Vec3(nbt.getDouble("pos_x"), nbt.getDouble("pos_y"), nbt.getDouble("pos_z")) :
+					Vec3.ZERO,
+				nbt.contains("dim") ?
+					ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(nbt.getString("dim"))) :
+					Level.OVERWORLD);
 		}
 
 		public CompoundTag write() {
@@ -50,7 +45,7 @@ public class FactionSavedData extends SavedData {
 			nbt.putDouble("pos_x", pos.x);
 			nbt.putDouble("pos_y", pos.y);
 			nbt.putDouble("pos_z", pos.z);
-			nbt.putString("dim", dim == Level.OVERWORLD ? OVERWORLD : dim == Level.NETHER ? NETHER : dim == Level.END ? END : "confusion");
+			nbt.putString("dim", dim.location().toString());
 			return nbt;
 		}
 	}

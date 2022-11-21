@@ -66,7 +66,7 @@ public class FactionArgument implements ArgumentType<String> {
 								|| FactionType.ACTIVE.equals(type) && !entry.getValue().hidden)
 						.map((entry) -> StringArgumentType.escapeIfRequired(entry.getKey())), sb);
 			} else if (cc.getSource() instanceof SharedSuggestionProvider ssp) {
-				return ssp.customSuggestion((CommandContext<SharedSuggestionProvider>) cc, sb);
+				return ssp.customSuggestion(cc);
 			}
 		}
 

@@ -1,15 +1,15 @@
 package com.skyline.factioncommands.common.data;
 
+import com.skyline.factioncommands.FactionCommands;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.skyline.factioncommands.FactionCommands;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
@@ -21,10 +21,6 @@ public class FactionSavedData extends WorldSavedData {
 	public Map<String, FactionData> factions = new HashMap<String, FactionData>();
 
 	public static class DimLocation {
-		public static final String OVERWORLD = "overworld";
-		public static final String NETHER = "nether";
-		public static final String END = "end";
-
 		public Vector3d pos;
 		public RegistryKey<World> dim;
 
@@ -34,16 +30,13 @@ public class FactionSavedData extends WorldSavedData {
 		}
 
 		public static DimLocation read(CompoundNBT nbt) {
-			RegistryKey<World> dim = World.OVERWORLD;
-			Vector3d pos = Vector3d.ZERO;
-			if (nbt.contains("dim")) {
-				String dimKey = nbt.getString("dim");
-				dim = dimKey == OVERWORLD ? World.OVERWORLD : dimKey == NETHER ? World.NETHER : dimKey == END ? World.END : World.OVERWORLD;
-			}
-			if (nbt.contains("pos_x") && nbt.contains("pos_y") && nbt.contains("pos_z")) {
-				pos = new Vector3d(nbt.getDouble("pos_x"), nbt.getDouble("pos_y"), nbt.getDouble("pos_z"));
-			}
-			return new DimLocation(pos, dim);
+			return new DimLocation(
+				nbt.contains("pos_x") && nbt.contains("pos_y") && nbt.contains("pos_z") ?
+					new Vector3d(nbt.getDouble("pos_x"), nbt.getDouble("pos_y"), nbt.getDouble("pos_z")) :
+				Vector3d.ZERO,
+				nbt.contains("dim") ?
+					RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(nbt.getString("dim"))) :
+					World.OVERWORLD);
 		}
 
 		public CompoundNBT write() {
@@ -51,7 +44,7 @@ public class FactionSavedData extends WorldSavedData {
 			nbt.putDouble("pos_x", pos.x);
 			nbt.putDouble("pos_y", pos.y);
 			nbt.putDouble("pos_z", pos.z);
-			nbt.putString("dim", dim == World.OVERWORLD ? OVERWORLD : dim == World.NETHER ? NETHER : dim == World.END ? END : "confusion");
+			nbt.putString("dim", dim.location().toString());
 			return nbt;
 		}
 	}

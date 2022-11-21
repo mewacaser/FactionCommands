@@ -1,12 +1,8 @@
 package com.skyline.factioncommands;
 
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-
 import com.skyline.factioncommands.common.commands.FactionArgument;
 import com.skyline.factioncommands.common.commands.FactionCommand;
-
+import javax.annotation.Nonnull;
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.event.RegisterCommandsEvent;
